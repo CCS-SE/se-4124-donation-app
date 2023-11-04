@@ -1,8 +1,10 @@
 import { Button, useDisclosure, Spinner } from '@nextui-org/react';
 import { ConnectWallet } from '@thirdweb-dev/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CreateFundraiserModal from '../components/Modal/CreateFundraiserModal';
 import FundraiserCard from '../components/Card/FundraiserCard';
+import { ethers } from 'ethers';
+import { useAddress, useContract } from '@thirdweb-dev/react';
 
 interface FundraiserProps {
   beneficiary: string;
@@ -18,6 +20,55 @@ export default function DonationPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [fundraisers, setFundraisers] = useState<FundraiserProps[]>([]);
+
+  const address = useAddress();
+  const { contract } = useContract(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
+
+  const getAllFundraisers = async () => {
+    const fundraisers = await contract?.call('getAllFundraisers');
+
+    const parsedFundraisers = fundraisers.map(
+      (
+        fundraiser: {
+          beneficiary: string;
+          title: string;
+          description: string;
+          targetAmount: { toString: () => ethers.BigNumberish };
+          img: string;
+          amountCollected: { toString: () => ethers.BigNumberish };
+        },
+        index: number
+      ) => ({
+        key: index,
+        fundraiserId: index,
+        beneficiary: fundraiser.beneficiary,
+        title: fundraiser.title,
+        description: fundraiser.description,
+        img: fundraiser.img,
+        targetAmount: ethers.utils.formatEther(
+          fundraiser.targetAmount.toString()
+        ),
+        amountCollected: ethers.utils.formatEther(
+          fundraiser.amountCollected.toString()
+        ),
+      })
+    );
+
+    return parsedFundraisers;
+  };
+
+  const fetchFundraisers = async () => {
+    setIsLoading(true);
+    const data = await getAllFundraisers();
+    setFundraisers(data);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (contract) {
+      fetchFundraisers();
+    }
+  }, [address, contract]);
 
   return (
     <div className='h-screen'>
@@ -47,15 +98,22 @@ export default function DonationPage() {
         ) : !isLoading && fundraisers && fundraisers.length == 0 ? (
           <p className='font-medium text-lg'>No fundraisers yet.</p>
         ) : (
-          <FundraiserCard
-            amountCollected={0}
-            beneficiary='3182310318381238193'
-            description=''
-            fundraiserId={1}
-            img='https://preen.ph/wp-content/blogs.dir/38/files/1920/11/preen-supertyphoon-rolly-fandonations.jpg'
-            targetAmount={0.5}
-            title='Sagip Kapamilya'
-          />
+          fundraisers.map((fundraiser, i) => (
+            <div key={i}>
+              <FundraiserCard
+                amountCollected={fundraiser.amountCollected}
+                beneficiary={fundraiser.beneficiary}
+                description={fundraiser.description}
+                fundraiserId={i}
+                img={
+                  fundraiser.image ??
+                  'https://preen.ph/wp-content/blogs.dir/38/files/1920/11/preen-supertyphoon-rolly-fandonations.jpg'
+                }
+                targetAmount={fundraiser.targetAmount}
+                title={fundraiser.title}
+              />
+            </div>
+          ))
         )}
       </div>
       <div>
