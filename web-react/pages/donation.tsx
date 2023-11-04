@@ -12,7 +12,7 @@ interface FundraiserProps {
   description: string;
   targetAmount: number;
   amountCollected: number;
-  image: string;
+  img: string;
 }
 
 export default function DonationPage() {
@@ -71,9 +71,9 @@ export default function DonationPage() {
   }, [address, contract]);
 
   return (
-    <div className='h-screen'>
+    <div className='min-h-screen'>
       <div className='flex flex-row justify-between p-2 items-center'>
-        <h1 className='text-3xl text-violet-500 font-medium'>Fundraisers</h1>
+        <h1 className='text-3xl text-violet-500 font-medium mt-3 ml-3'>Fundraisers</h1>
         <div>
           <ConnectWallet
             dropdownPosition={{
@@ -85,6 +85,8 @@ export default function DonationPage() {
               backgroundColor: 'blueviolet',
               fontSize: 15,
               color: 'white',
+              marginTop: 20,
+              marginRight: 2
             }}
           />
         </div>
@@ -98,22 +100,25 @@ export default function DonationPage() {
         ) : !isLoading && fundraisers && fundraisers.length == 0 ? (
           <p className='font-medium text-lg'>No fundraisers yet.</p>
         ) : (
-          fundraisers.map((fundraiser, i) => (
-            <div key={i}>
-              <FundraiserCard
-                amountCollected={fundraiser.amountCollected}
-                beneficiary={fundraiser.beneficiary}
-                description={fundraiser.description}
-                fundraiserId={i}
-                img={
-                  fundraiser.image ??
-                  'https://preen.ph/wp-content/blogs.dir/38/files/1920/11/preen-supertyphoon-rolly-fandonations.jpg'
-                }
-                targetAmount={fundraiser.targetAmount}
-                title={fundraiser.title}
-              />
-            </div>
-          ))
+          <div className='flex flex-wrap'>
+            {fundraisers.map((fundraiser, i) => (
+              <div className='w-full sm:w-1/3 lg:w-[360px] m-3' key={i}>
+                <FundraiserCard
+                  amountCollected={fundraiser.amountCollected}
+                  beneficiary={fundraiser.beneficiary}
+                  description={fundraiser.description}
+                  fundraiserId={i}
+                  img={
+                    !fundraiser.img
+                      ? 'https://preen.ph/wp-content/blogs.dir/38/files/1920/11/preen-supertyphoon-rolly-fandonations.jpg'
+                      : fundraiser.img
+                  }
+                  targetAmount={fundraiser.targetAmount}
+                  title={fundraiser.title}
+                />
+              </div>
+            ))}
+          </div>
         )}
       </div>
       <div>

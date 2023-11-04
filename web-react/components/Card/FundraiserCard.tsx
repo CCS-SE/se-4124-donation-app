@@ -7,12 +7,13 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import AddDonationModal from '../Modal/AddDonationModal';
+import { FaEthereum } from 'react-icons/fa';
 
 interface FundraiserCardProps {
   fundraiserId: number;
   beneficiary: string;
   title: string;
-  description: string;
+  description?: string;
   img: string;
   targetAmount: number;
   amountCollected: number;
@@ -38,7 +39,7 @@ export default function FundraiserCard({
             radius='lg'
             width='100%'
             alt={title}
-            className='w-full object-cover h-[250px]'
+            className='w-full object-cover h-[230px]'
             src={img}
           />
         </CardBody>
@@ -56,6 +57,12 @@ export default function FundraiserCard({
                   Donate
                 </Button>
               </div>
+            </div>
+            <div className='flex flex-row bg-violet-200 mt-2 rounded-xl p-1 pl-2'>
+              <FaEthereum color='blueviolet'/>
+              <p className='text-[11px] text-default-500 ml-2'>
+                {beneficiary}
+              </p>
             </div>
           </div>
         </CardFooter>
