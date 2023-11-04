@@ -18,7 +18,7 @@ contract DonationContract {
     }
 
     mapping(uint256 => Fundraiser) public fundraisers;
-    
+
     uint256 public numOfFundraisers = 0;
 
     event FundraiserCreated(
@@ -58,5 +58,15 @@ contract DonationContract {
         );
 
         return numOfFundraisers - 1;
+    }
+
+    function getAllFundraisers() public view returns (Fundraiser[] memory) {
+        Fundraiser[] memory allFundraisers = new Fundraiser[](numOfFundraisers);
+
+        for (uint i = 0; i < numOfFundraisers; i++) {
+            allFundraisers[i] = fundraisers[i];
+        }
+
+        return allFundraisers;
     }
 }
