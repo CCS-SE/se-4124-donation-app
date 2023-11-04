@@ -15,8 +15,8 @@ interface FundraiserCardProps {
   title: string;
   description?: string;
   img: string;
-  targetAmount: number;
-  amountCollected: number;
+  targetAmount: string;
+  amountCollected: string;
 }
 
 export default function FundraiserCard({
