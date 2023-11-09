@@ -1,20 +1,19 @@
 import { Button, useDisclosure, Spinner } from '@nextui-org/react';
 import { ConnectWallet } from '@thirdweb-dev/react';
-import CreateFundraiserModal from '../components/Modal/CreateFundraiserModal';
-import FundraiserCard from '../components/Card/FundraiserCard';
+import CreateFundraiserModal from '../../components/Modal/CreateFundraiserModal';
+import FundraiserCard from '../../components/Card/FundraiserCard';
 import { ethers } from 'ethers';
 import { useContract, useContractRead } from '@thirdweb-dev/react';
 
 interface FundraiserProps {
   beneficiary: string;
   title: string;
-  description: string;
   targetAmount: string;
   amountCollected: string;
   img: string;
 }
 
-export default function DonationPage() {
+export default function FundraisersPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { contract } = useContract(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
@@ -24,7 +23,7 @@ export default function DonationPage() {
   return (
     <div className='min-h-screen'>
       <div className='flex flex-row justify-between p-2 items-center'>
-        <h1 className='text-3xl text-violet-500 font-medium mt-3 ml-3'>
+        <h1 className='lg:text-3xl text-2xl text-violet-500 font-medium mt-3 ml-3'>
           Fundraisers
         </h1>
         <div>
@@ -33,10 +32,9 @@ export default function DonationPage() {
               side: 'bottom',
               align: 'center',
             }}
-            btnTitle='Connect Wallet'
             style={{
               backgroundColor: 'blueviolet',
-              fontSize: 15,
+              fontSize: 10,
               color: 'white',
               marginTop: 20,
               marginRight: 2,
@@ -60,7 +58,6 @@ export default function DonationPage() {
                     fundraiser.amountCollected
                   )}
                   beneficiary={fundraiser.beneficiary}
-                  description={fundraiser.description}
                   fundraiserId={i}
                   img={
                     !fundraiser.img
