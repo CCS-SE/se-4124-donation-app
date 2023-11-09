@@ -81,10 +81,18 @@ contract DonationContract {
 
         fundraiser.donations.push(donation);
 
-        (bool sent,) = payable(fundraiser.beneficiary).call{value: amount}("");
+        (bool sent, ) = payable(fundraiser.beneficiary).call{value: amount}("");
 
         if (sent) {
             fundraiser.amountCollected += amount;
         }
+    }
+
+    function getFundraiser(
+        uint256 _fundraiserId
+    ) public view returns (Fundraiser memory) {
+        Fundraiser memory fundraiser = fundraisers[_fundraiserId];
+
+        return fundraiser;
     }
 }
