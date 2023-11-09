@@ -69,4 +69,22 @@ contract DonationContract {
 
         return allFundraisers;
     }
+
+    function donateToFundraiser(uint256 _id) public payable {
+        uint256 amount = msg.value;
+        Fundraiser storage fundraiser = fundraisers[_id];
+
+        Donation memory donation = Donation({
+            donor: msg.sender,
+            amount: amount
+        });
+
+        fundraiser.donations.push(donation);
+
+        (bool sent,) = payable(fundraiser.beneficiary).call{value: amount}("");
+
+        if (sent) {
+            fundraiser.amountCollected += amount;
+        }
+    }
 }
