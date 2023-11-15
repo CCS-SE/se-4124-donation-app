@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -7,7 +7,6 @@ import {
   ModalFooter,
   Button,
   Input,
-  Textarea,
 } from '@nextui-org/react';
 import { useContract } from '@thirdweb-dev/react';
 import { ethers } from 'ethers';
