@@ -73,13 +73,22 @@ contract DonationContract {
     function donateToFundraiser(uint256 _id) public payable {
         uint256 amount = msg.value;
         Fundraiser storage fundraiser = fundraisers[_id];
+        bool donorExists = false;
 
+        for (uint i = 0; i < fundraiser.donations.length; i++) {
+            if (fundraiser.donations[i].donor == msg.sender) {
+                fundraiser.donations[i].amount += amount;
+                donorExists = true;
+                break;
+        }
+    }
+        if (!donorExists) {
         Donation memory donation = Donation({
             donor: msg.sender,
             amount: amount
         });
-
         fundraiser.donations.push(donation);
+        }
 
         (bool sent, ) = payable(fundraiser.beneficiary).call{value: amount}("");
 
